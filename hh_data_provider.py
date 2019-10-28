@@ -9,39 +9,7 @@ BASE_PAYLOAD = {'area': 1, 'period': 30, 'text': ''}
 
 def get_data():
     requested_data = request_data()
-    return process_data(requested_data)
-
-
-def get_rub_salary(salary):
-    if salary is None or salary['currency'] != 'RUR':
-        return None
-    else:
-        return common.predict_salary(salary['from'], salary['to'])
-
-
-def process_data(data):
-    result = []
-
-    for language in data:
-        processed = 0
-        found = 0
-        salary = 0
-
-        for vacancy in language['vacancies']:
-            processed_salary = get_rub_salary(vacancy['salary'])
-            found += 1
-
-            if processed_salary is not None:
-                salary += processed_salary
-                processed += 1
-
-        result.append({language['name']: {
-             'vacancies_found': found,
-             'vacancies_processed': processed,
-             'average_salary': int(salary / processed)
-        }})
-
-    return result
+    return common.process_data(requested_data, get_rub_salary)
 
 
 def request_data():
@@ -68,3 +36,10 @@ def request_data():
         data.append({'name': language, 'vacancies': vacancies})
 
     return data
+
+
+def get_rub_salary(salary):
+    if salary is None or salary['salary'] is None or salary['salary']['currency'] != 'RUR':
+        return None
+    else:
+        return common.predict_salary(salary['salary']['from'], salary['salary']['to'])
