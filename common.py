@@ -1,3 +1,5 @@
+from terminaltables import DoubleTable
+
 COEF_FROM = 1.2
 COEF_TO = 0.8
 
@@ -40,10 +42,26 @@ def process_data(data, rub_salary_func):
         else:
             average_salary = int(salary/processed)
 
-        result.append({language['name']: {
-             'vacancies_found': found,
-             'vacancies_processed': processed,
-             'average_salary': average_salary
-        }})
+        result.append({
+            'name': language['name'],
+            'vacancies_found': found,
+            'vacancies_processed': processed,
+            'average_salary': average_salary
+        })
 
     return result
+
+
+def print_table(title, data):
+    table_content = []
+    table_header = ['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']
+
+    table_content.append(table_header)
+
+    for language in data:
+        table_content.append(
+            [language['name'], language['vacancies_found'], language['vacancies_processed'], language['average_salary']]
+        )
+
+    print(DoubleTable(table_content, title).table)
+    print()
