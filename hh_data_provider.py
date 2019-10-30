@@ -7,13 +7,12 @@ API_URL = 'https://api.hh.ru/vacancies'
 BASE_PAYLOAD = {'area': 1, 'period': 30, 'text': ''}
 
 
-def get_data():
-    requested_data = request_data()
-    return common.process_data(requested_data, get_rub_salary)
+def get_salaries():
+    return common.process_salaries(request_salaries(), get_rub_salary)
 
 
-def request_data():
-    data = []
+def request_salaries():
+    salaries = []
 
     for language in programmers_languages:
         payload = copy.copy(BASE_PAYLOAD)
@@ -29,13 +28,11 @@ def request_data():
             response = requests.get(API_URL, payload)
             page_numbers = response.json()['pages']
             page += 1
+            vacancies.extend(response.json()['items'])
 
-            for item in response.json()['items']:
-                vacancies.append(item)
+        salaries.append({'name': language, 'vacancies': vacancies})
 
-        data.append({'name': language, 'vacancies': vacancies})
-
-    return data
+    return salaries
 
 
 def get_rub_salary(salary):

@@ -21,29 +21,29 @@ def predict_salary(salary_from, salary_to):
         return None
 
 
-def process_data(data, rub_salary_func):
+def process_salaries(salaries, rub_salary_func):
     result = []
 
-    for language in data:
+    for salary in salaries:
         processed = 0
         found = 0
-        salary = 0
+        salary_sum = 0
 
-        for vacancy in language['vacancies']:
+        for vacancy in salary['vacancies']:
             processed_salary = rub_salary_func(vacancy)
             found += 1
 
             if processed_salary is not None:
-                salary += processed_salary
+                salary_sum += processed_salary
                 processed += 1
 
         if processed == 0:
             average_salary = 0
         else:
-            average_salary = int(salary/processed)
+            average_salary = int(salary_sum/processed)
 
         result.append({
-            'name': language['name'],
+            'name': salary['name'],
             'vacancies_found': found,
             'vacancies_processed': processed,
             'average_salary': average_salary

@@ -2,27 +2,24 @@ import requests
 import copy
 import os
 import common
-from dotenv import load_dotenv
 from data import programmers_languages
 
-load_dotenv()
-
-SUPERJOB_SECRET_KEY = os.environ['SUPERJOB_SECRET_KEY']
-SUPERJOB_API_VERSION = os.environ['SUPERJOB_API_VERSION']
 TOWN = 4
 CATALOGUES = [48]
 BASE_PAYLOAD = {'town': TOWN, 'catalogues': CATALOGUES, 'keyword': ''}
-BASE_HEADERS = {'X-Api-App-Id': SUPERJOB_SECRET_KEY}
-API_URL = 'https://api.superjob.ru/{}/vacancies'.format(SUPERJOB_API_VERSION)
+BASE_HEADERS = {'X-Api-App-Id': ''}
+BASE_API_URL = 'https://api.superjob.ru/{}/vacancies'
 
 
-def get_data():
-    requested_data = request_data()
-    return common.process_data(requested_data, get_rub_salary)
+def get_salaries():
+    return common.process_salaries(request_salaries(), get_rub_salary)
 
 
-def request_data():
-    data = []
+def request_salaries():
+    salaries = []
+    api_url = BASE_API_URL.format(os.environ['SUPERJOB_API_VERSION'])
+    headers = copy.copy(BASE_HEADERS)
+    headers['X-Api-App-Id'] = os.environ['SUPERJOB_SECRET_KEY']
 
     for language in programmers_languages:
         payload = copy.copy(BASE_PAYLOAD)
@@ -35,16 +32,14 @@ def request_data():
 
         while get_next_results:
             payload['page'] = page
-            response = requests.get(API_URL, params=payload, headers=BASE_HEADERS)
+            response = requests.get(api_url, params=payload, headers=headers)
             get_next_results = response.json()['more']
             page += 1
+            vacancies.extend(response.json()['objects'])
 
-            for item in response.json()['objects']:
-                vacancies.append(item)
+        salaries.append({'name': language, 'vacancies': vacancies})
 
-        data.append({'name': language, 'vacancies': vacancies})
-
-    return data
+    return salaries
 
 
 def get_rub_salary(vacancy):
