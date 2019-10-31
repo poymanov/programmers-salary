@@ -1,6 +1,5 @@
 import requests
 import copy
-import os
 import common
 from data import programmers_languages
 
@@ -11,15 +10,15 @@ BASE_HEADERS = {'X-Api-App-Id': ''}
 BASE_API_URL = 'https://api.superjob.ru/{}/vacancies'
 
 
-def get_salaries():
-    return common.process_salaries(request_salaries(), get_rub_salary)
+def get_salaries(api_version, secret_key):
+    return common.process_salaries(request_salaries(api_version, secret_key), get_rub_salary)
 
 
-def request_salaries():
+def request_salaries(api_version, secret_key):
     salaries = []
-    api_url = BASE_API_URL.format(os.environ['SUPERJOB_API_VERSION'])
+    api_url = BASE_API_URL.format(api_version)
     headers = copy.copy(BASE_HEADERS)
-    headers['X-Api-App-Id'] = os.environ['SUPERJOB_SECRET_KEY']
+    headers['X-Api-App-Id'] = secret_key
 
     for language in programmers_languages:
         payload = copy.copy(BASE_PAYLOAD)
