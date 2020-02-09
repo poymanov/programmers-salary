@@ -2,14 +2,13 @@
 
 Приложение получает статистику зарплат по популярным языкам программирования с **HeadHunter** и **SuperJob**.
 
-### Как установить
+[![asciicast](https://asciinema.org/a/kjc4bD8FiL6UYOni7ZhTzMSaP.svg)](https://asciinema.org/a/kjc4bD8FiL6UYOni7ZhTzMSaP)
 
-Для работы приложения требуется **Python 3**.
+### Установка
 
-Установить зависимости приложения:
-```
-pip install -r requirements.txt
-```
+Для работы приложения требуется **Docker** и **Docker Compose**.
+
+### Настройка
 
 Подготовить файл для хранения API-токена сервиса:
 ```
@@ -26,9 +25,15 @@ SUPERJOB_SECRET_KEY=<secret_key>
 SUPERJOB_API_VERSION=2.27
 ```
 
-Запуск:
+### Запуск
+
 ```
-python main.py
+make run
+```
+
+Удаление всех временных файлов приложения:
+```
+make flush
 ```
 
 ### Цель проекта

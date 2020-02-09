@@ -3,11 +3,7 @@ import superjob_data_provider
 import common
 import os
 
-from dotenv import load_dotenv
-
 if __name__ == '__main__':
-    load_dotenv()
-
     hh_data = hh_data_provider.get_salaries()
     common.print_table('HeadHunter Moscow', hh_data)
 
